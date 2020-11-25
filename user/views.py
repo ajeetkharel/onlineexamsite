@@ -3,8 +3,11 @@ from .forms import CustomUserCreationForm
 from django.contrib.auth import authenticate, login, logout
 
 def login_user(request):
+    context = {
+        'title': "Login"
+    }
     if request.user.is_authenticated:
-        return redirect('exam-home')
+        return redirect('home')
     else:
         if request.method == "POST":
             email = request.POST["email"]
@@ -12,14 +15,17 @@ def login_user(request):
             user = authenticate(request, email=email, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('exam-home')
+                return redirect('home')
             else:
                 print("Failed")
-        return render(request, 'user/login.html')
+        return render(request, 'user/login.html', context=context)
 
 def register_user(request):
+    context = {
+        'title': "Login"
+    }
     if request.user.is_authenticated:
-        return redirect('exam-home')
+        return redirect('home')
     else:
         if request.method == "POST":
             form = CustomUserCreationForm(request.POST)
@@ -30,12 +36,12 @@ def register_user(request):
                 user = authenticate(request, email=email, password=password)
                 if user is not None:
                     login(request, user)
-                    return redirect('exam-home')
+                    return redirect('home')
                 else:
                     print("Registration failed")
-            return render(request, 'user/register.html', context={'form':form})
-    return render(request, 'user/register.html')
+            return render(request, 'user/register.html', context={'form':form, 'title':Register})
+    return render(request, 'user/register.html', context=context)
     
 def logout_user(request):
     logout(request)
-    return redirect('user-login')
+    return redirect('login')

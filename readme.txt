@@ -1,0 +1,3 @@
+Superuser:
+email: admin@admin.com
+pass: admin

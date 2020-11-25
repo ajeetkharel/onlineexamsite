@@ -1,4 +1,4 @@
-{% extends 'home/base.html' %}
+{% extends 'base/base.html' %}
 {% block content %}
     <div class="d-flex bd-highlight justify-content-center">
         <form class="text-center border border-dark p-5 mb-3" action="" method="POST">
@@ -60,7 +60,7 @@
     
             <!-- Register -->
             <p>Already registered?
-                <a href="{% url 'user-login' %}">Login</a>
+                <a href="{% url 'login' %}">Login</a>
             </p>
     
             <!-- Social login -->

@@ -1,0 +1,136 @@
+{%  load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>{{title}}</title>
+    {% block head%} {% endblock head %}
+    
+</head>
+<body>
+    <nav class="mb-2 navbar navbar-expand-md navbar-dark bg-primary">
+        <a class="navbar-brand" href="{% url 'home' %}">Online Exam</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+  
+        <div class="collapse navbar-collapse" id="navbarsExample04">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
+            </li>
+            {% if user.is_authenticated %}
+            {% if user.is_superuser %}
+                <li class="nav-item"><a class="nav-link" href="/admin"><i class="fas fa-cog"></i> &nbsp;Admin Panel</a></li>
+            {% endif %}
+            {% endif %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {% if user.is_authenticated %}
+                {{user.first_name}} ({% if user.is_student != True %}Teacher{% endif %}{% if user.is_student %}Student{% endif %})
+              {% else %}
+                Account
+              {% endif %}
+              </a>
+              {% if user.is_authenticated %}
+                <div class="dropdown-menu" aria-labelledby="dropdown04">
+                  <a class="dropdown-item" href="#">Profile</a>
+                  {% if not user.is_student %}
+                  <a class="dropdown-item" href="{% url 'manage'%}">Manage Exams</a>
+                  <a class="dropdown-item" href="{% url 'home'%}">Student's results</a>
+                  {%else%}
+                  {% endif %}
+                  <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                </div>
+              {% else %}
+                <div class="dropdown-menu" aria-labelledby="dropdown04">
+                  <a class="dropdown-item" href="{% url 'login' %}">Login</a>
+                  <a class="dropdown-item" href=" {% url 'register' %} ">Register</a>
+                </div>
+              {% endif %}
+              
+            </li>
+          </ul>
+        </div>
+      </nav>
+    
+    {% block content %} {% endblock content %}
+    {% if user.is_authenticated %}
+      {% if user.is_student %}
+        {% block student %} {% endblock student %}
+      {% else %}
+
+        {% block teacher %} {% endblock teacher %}
+      {% endif %}
+    {% endif %}
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/0ec6290b20.js" crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function () {
+        $(document).click(function (event) {
+            var click = $(event.target);
+            var _open = $(".navbar-collapse").hasClass("show");
+            if (_open === true && !click.hasClass("navbar-toggler")) {
+                $(".navbar-toggler").click();
+            }
+        });
+    });
+</script>
+<!-- Menu Toggle Script -->
+<script>
+  $("#menu-toggle").click(function(e) {
+    e.preventDefault();
+    $("#wrapper").toggleClass("toggled");
+  });
+</script>
+<script>
+  var modalDiv = $("#modal-div");
+  $('[data-action=edit_modal]').on("click", function() {
+    var id = $(this).data('id');
+    $.ajax({
+      url: 'edit_exams/'+id,
+      success: function(data) {
+        modalDiv.html(data);
+        $("#myEdit").modal('show');
+      },
+      error:function(){
+            console.log('error')
+        },
+    });
+  });
+  $('[data-action=delete_modal]').on("click", function() {
+    var id = $(this).data('id');
+    $.ajax({
+      url: 'delete_exams/'+id,
+      success: function(data) {
+        modalDiv.html(data);
+        $("#myDelete").modal('show');
+      },
+      error:function(){
+            console.log('error')
+        },
+    });
+  });
+  $('[data-action=add_modal]').on("click", function() {
+    var id = $(this).data('id');
+    $.ajax({
+      url: 'add_exams/',
+      success: function(data) {
+        modalDiv.html(data);
+        $("#myadd").modal('show');
+      },
+      error:function(){
+            console.log('error')
+        },
+    });
+  });
+</script>
+</body>
+</html>
