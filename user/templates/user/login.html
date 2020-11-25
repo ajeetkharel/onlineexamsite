@@ -4,7 +4,11 @@
         <form class="text-center border border-dark p-5" action="" method="POST">
             {% csrf_token %}
             <p class="h4 mb-4">Login</p>
-    
+            {% if message %}
+            <div class="alert alert-danger">
+                <strong>{{message}}</strong>
+            </div>
+            {% endif %}
             <!-- Email -->
             <input type="email" id="defaultLoginFormEmail" class="form-control mb-4" name="email" size="30" placeholder="E-mail">
     

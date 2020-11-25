@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'base',
     'user',
+    'school',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -119,6 +120,7 @@ USE_TZ = True
 AUTH_USER_MODEL = 'user.User'
 
 LOGOUT_REDIRECT_URL = 'login'
+LOGIN_URL = 'login'
 
 
 # Static files (CSS, JavaScript, Images)

@@ -1,5 +1,7 @@
 {% extends 'base/base.html' %}
+{% load define_action %}
 {% block content %}
+    {{shown}}
     <div class="d-flex bd-highlight justify-content-center">
         <form class="text-center border border-dark p-5 mb-3" action="" method="POST">
             {% csrf_token %}
@@ -12,24 +14,30 @@
             {% if form.errors %}
                 {% for field in form %}
                     {% if field.label == "Email address" %}
+                        {% if field.errors.0 %}
                         <div class="alert alert-danger">
                             <strong>{{ field.errors.0|escape }}</strong>
                         </div>
+                        {% define as shown %}
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
+                {{shown}}
             {% endif %}
             <input type="email" id="defaultLoginFormEmail" class="form-control mb-4" name="email" size="30" placeholder="E-mail">
-    
+            {{shown}}
             <!-- Password -->
             {% if form.errors %}
                 {% for field in form %}
                     {% if field.label == "Password" %}
-                    {{field.errors}}
-                        {% for error in field.errors %}
+                         {% if field.errors.0 %}
+                         {% if not shown == "True" %}
                             <div class="alert alert-danger">
-                                <strong>{{ field.errors.0|escape }}</strong>
+                                    <strong>{{ field.errors.0|escape }}</strong>
                             </div>
-                        {% endfor %}
+                            {% define "True" as shown %}
+                        {% endif %}
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
             {% endif %}
@@ -37,9 +45,14 @@
             {% if form.errors %}
                 {% for field in form %}
                     {% if field.label == "Password confirmation" %}
+                        {% if field.errors.0 %}
+                        {% if not shown %}
                         <div class="alert alert-danger">
                             <strong>{{ field.errors.0|escape }}</strong>
                         </div>
+                        {% define "True" as shown %}
+                        {% endif %}
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
             {% endif %}

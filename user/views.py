@@ -17,7 +17,7 @@ def login_user(request):
                 login(request, user)
                 return redirect('home')
             else:
-                print("Failed")
+                context['message'] = "Invalid email/password"
         return render(request, 'user/login.html', context=context)
 
 def register_user(request):
@@ -39,7 +39,7 @@ def register_user(request):
                     return redirect('home')
                 else:
                     print("Registration failed")
-            return render(request, 'user/register.html', context={'form':form, 'title':Register})
+            return render(request, 'user/register.html', context={'form':form, 'title':"Register"})
     return render(request, 'user/register.html', context=context)
     
 def logout_user(request):
