@@ -1,0 +1,63 @@
+{% extends 'home/base.html' %}
+{%block teacher%}
+<div class="container">
+    <div class="rounded col bg-secondary justify-content-end mb-2 text-white p-2">
+        <span><b>Manage Exams</b></span>
+        <a class="btn btn-info" data-action="add_modal">Add Exam</a>
+    </div>
+        <table class="table table-hover table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Start Time</th>
+                    <th scope="col">End Time</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for exam in exams %}
+                    <tr>
+                        <th scope="row">{{exam.pk}}</th>
+                        <td> {{exam.title}} </td>
+                        <td> {{ exam.start_date }} </td>
+                        <td> {{ exam.end_date }} </td>
+                        <td>
+							<a data-id="{{exam.pk}}"  class="btn btn-info" data-action="edit_modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
+							<a data-id="{{exam.pk}}"  class="btn btn-warning" data-action="delete_modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+						</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div id="modal-div"></div>
+        <nav aria-label="Page navigation">
+            {% if exams.has_other_pages %}
+                <ul class="pagination pagination-sm justify-content-end">
+                <div class="mr-auto">
+                    Showing {{exams.paginator.per_page}} out of {{exams.paginator.count}} results
+                </div>
+                {% if exams.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ exams.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+                <li class="page-item disabled"><a class="page-link" >&laquo;</a></li>
+            {% endif %}
+            {% for i in exams.paginator.page_range %}
+                {% if exams.number == i %}
+                <li class="page-item active"><a class="page-link" >{{ i }} <span class="sr-only">(current)</span> 
+            .     </a></li>
+            {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+            {% endfor %}
+            {% if exams.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ exams.next_page_number }}">&raquo;</a></li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link" >&raquo;</a></li>
+                {% endif %}
+            </ul>
+            {% endif %}
+        </nav>
+    </div>
+    
+{%endblock teacher%}
