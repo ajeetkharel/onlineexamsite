@@ -6,7 +6,7 @@
     <div class="card-columns">
     {% for cexam in current_exams %}
         <a href="{% url 'take-exam' cexam.pk %}">
-            <div class="card text-white bg-primary mb-3" style="min-width: 15rem;max-width: 15rem;">
+            <div class="card text-white bg-primary mb-3" style="max-width: 15rem;">
                 <div class="card-body">
                     <p class="card-title">Date: {{cexam.start_date | date:"M d, Y" }}</p>
                     <h6 class="card-title">Subject: {{cexam.subject }}</h6>
@@ -21,7 +21,7 @@
     <h1 class="h2">Upcoming Exams</h1>
     <div class="card-columns">
         {% for exam in exams %}
-        <div class="card text-white bg-primary mb-3" style="min-width: 15rem;max-width: 15rem;">
+        <div class="card text-white bg-primary mb-3" style="max-width: 15rem;">
             <div class="card-body">
                 <p class="card-title">Date: {{exam.start_date | date:"M d, Y" }}</p>
                 <h6 class="card-title">Subject: {{exam.subject }}</h6>
