@@ -5,7 +5,7 @@
     <div class="d-flex bd-highlight justify-content-center">
         <form class="text-center border border-dark p-5 mb-3" action="" method="POST">
             {% csrf_token %}
-            <p class="h4 mb-4">Register</p>
+            <p class="h4 mb-4">Student Register</p>
             <div class="d-flex justify-content-between">
                 <input type="text" class="form-control mr-3 mb-4" name="first_name" size="13" placeholder="First Name">
                 <input type="text" class="form-control mb-4" name="last_name" size="13" placeholder="Last Name">
@@ -25,6 +25,13 @@
                 {{shown}}
             {% endif %}
             <input type="email" id="defaultLoginFormEmail" class="form-control mb-4" name="email" size="30" placeholder="E-mail">
+            
+            <select class="form-control form-select"  name="class" required>
+                <option selected disabled>Select class</option>
+                {% for class in classes %}
+                <option value="{{class.pk}}">{{class.name}}</option>
+                {% endfor %}
+            </select> <br>
             {{shown}}
             <!-- Password -->
             {% if form.errors %}

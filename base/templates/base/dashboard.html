@@ -1,1 +1,93 @@
 {% extends 'base/base.html' %}
+{% block student %}
+{% load index %}
+<div class="container">
+    <h1 class="h2">Today's Exams</h1>
+    <div class="card-columns">
+    {% for cexam in current_exams %}
+        <a href="{% url 'take-exam' cexam.pk %}">
+            <div class="card text-white bg-primary mb-3" style="min-width: 15rem;max-width: 15rem;">
+                <div class="card-body">
+                    <p class="card-title">Date: {{cexam.start_date | date:"M d, Y" }}</p>
+                    <h6 class="card-title">Subject: {{cexam.subject }}</h6>
+                    <p class="card-title mb-1">Start Time: {{cexam.start_date | date:"f A" }}</p>
+                    <p class="card-title mb-1">End Time: {{cexam.end_date | date:"f A" }}</p>
+                </div>
+            </div>
+        </a>
+    {% endfor %}
+    </div>
+
+    <h1 class="h2">Upcoming Exams</h1>
+    <div class="card-columns">
+        {% for exam in exams %}
+        <div class="card text-white bg-primary mb-3" style="min-width: 15rem;max-width: 15rem;">
+            <div class="card-body">
+                <p class="card-title">Date: {{exam.start_date | date:"M d, Y" }}</p>
+                <h6 class="card-title">Subject: {{exam.subject }}</h6>
+                <p class="card-title">Start Time: {{exam.start_date | date:"f A" }}</p>
+                <p class="card-title mb-1">End Time: {{exam.end_date | date:"f A" }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock student%}
+{% block teacher %}
+
+<div class="container">
+
+<div class="alert alert-secondary">
+    <strong>Student's Results</strong>
+</div>
+    <table class="table table-hover table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Exam given</th>
+                <th scope="col">Result</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in Students %}
+                <tr>
+                    <th scope="row">{{student.pk}}</th>
+                    <td> {{student.first_name}} {{student.last_name}} </td>
+                    <td> {{ student|gave_exam }} </td>
+                    <td>
+                        <a class="btn btn-small {% if not student|gave_exam %} btn-secondary disabled {% else %} btn-primary {% endif %}" href="{% url 'user-result' student.pk%}">View Result</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation">
+        {% if Students.has_other_pages %}
+            <ul class="pagination pagination-sm justify-content-end">
+            <div class="mr-auto">
+                Showing {{Students.paginator.per_page}} out of {{Students.paginator.count}} results
+            </div>
+            {% if Students.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ Students.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+            <li class="page-item disabled"><a class="page-link" >&laquo;</a></li>
+        {% endif %}
+        {% for i in Students.paginator.page_range %}
+            {% if Students.number == i %}
+            <li class="page-item active"><a class="page-link" >{{ i }} <span class="sr-only">(current)</span> 
+        .     </a></li>
+        {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+        {% endfor %}
+        {% if Students.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ Students.next_page_number }}">&raquo;</a></li>
+            {% else %}
+            <li class="page-item disabled"><a class="page-link" >&raquo;</a></li>
+            {% endif %}
+        </ul>
+        {% endif %}
+    </nav>
+</div>
+{% endblock teacher %}

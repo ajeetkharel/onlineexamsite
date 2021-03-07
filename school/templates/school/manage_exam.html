@@ -12,6 +12,7 @@
                     <th scope="col">Title</th>
                     <th scope="col">Start Time</th>
                     <th scope="col">End Time</th>
+                    <th scope="col">Class</th>
                     <th scope="col">Actions</th>
                 </tr>
             </thead>
@@ -22,6 +23,7 @@
                         <td> {{exam.name}} </td>
                         <td> {{ exam.start_date }} </td>
                         <td> {{ exam.end_date }} </td>
+                        <td> {{exam.assigned_class}} </td>
                         <td>
 							<a data-id="{{exam.pk}}"  class="btn btn-info" data-action="edit_modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
 							<a data-id="{{exam.pk}}"  class="btn btn-warning" data-action="delete_modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
