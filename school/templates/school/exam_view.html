@@ -2,106 +2,115 @@
 {% load index %}
 {% block content %}
 <div class="container">
-    {% if Exam %}
-        <div class="row alert alert-primary">
-            <div class="col">
-                <strong>Current Exam: {{ Exam.subject }}</strong>
-            </div>
-            <!-- <div class="col ml-auto justify-content-end" id="demo"></div> -->
-            <script>
-                var countDownDate = Date.parse("{{Exam.end_date|date:'m-d-Y H:m:s'}}");
-                console.log("{{Exam.end_date|date:'m-d-Y H:m:s'}}");
-                console.log(countDownDate);
-                // Update the count down every 1 second
-                var x = setInterval(function() {
-
-                // Get today's date and time
-                var now = new Date().getTime();
-                
-                // Find the distance between now and the count down date
-                var distance = countDownDate - now;
-                
-                // Time calculations for days, hours, minutes and seconds
-                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                
-                // Output the result in an element with id="demo"
-                document.getElementById("demo").innerHTML = "Exam ends in " + days + "d " + hours + "h "
-                + minutes + "m " + seconds + "s ";
-                
-                // If the count down is over, write some text 
-                if (distance < 0) {
-                clearInterval(x);
-                window.location.reload(false); 
-                }
-                }, 1000);
-            </script>
-        </div>
-        <form action="" method="post">
-            {% csrf_token %}
-            {% for question in questions %}
-            <div class="card bg-primary mb-3 ">
-                    <div class="text-white card-body" style="padding: 10px 15px;">
-                        <div class="card-title" style="font-size:large;">                  
-                            <pre style="color: white;margin: 0px;"></pre>{{question.title}}</pre>
-                        </div>
-                        {% if messages %}
-                            {% with i=forloop.counter0 %}
-                            {% if messages|index:i|index:0 == "C" %}
-                                <div class="p-2 alert alert-primary" style="font-size: small;" role="alert">
-                                    {{ messages|index:i }}
-                                </div>
-                            {% else %}
-                                <div class="p-2 alert alert-warning" style="font-size: small;" role="alert">
-                                    {{ messages|index:i}}
-                                </div>
-                            {% endif %}
-                            {% endwith %}
-                        {% else %}
-                        {% endif %}        
-                    </div>
-                    <ul class = "list-group">
-                        <li class = "list-group-item">
-                            <div class="radio">
-                                <input type="radio"  value="1" id="question{{question.pk}}o1" name="question{{question.pk}}" group="question{{question.pk}}" />
-                                <label for="question{{question.pk}}o1">
-                                    {{question.option1}}
-                                </label>
-                            </div>
-                        </li>
-                        <li class = "list-group-item">
-                            <div class="radio">
-                                <input type="radio" value="2" id="question{{question.pk}}o2" name="question{{question.pk}}" group="question{{question.pk}}" />
-                                <label for="question{{question.pk}}o2">
-                                    {{question.option2}}
-                                </label>
-                            </div>
-                        </li>
-                        <li class = "list-group-item">
-                            <div class="radio">
-                                <input type="radio" value="3" id="question{{question.pk}}o3" name="question{{question.pk}}" group="question{{question.pk}}" />
-                                <label for="question{{question.pk}}o3">
-                                    {{question.option3}}
-                                </label>
-                            </div>
-                        </li>
-                        <li class = "list-group-item">
-                            <div class="radio">
-                                <input type="radio" value="4" id="question{{question.pk}}o4" name="question{{question.pk}}" group="question{{question.pk}}" />
-                                <label for="question{{question.pk}}o4">
-                                    {{question.option4}}
-                                </label>
-                            </div>
-                        </li>
-                    </ul>
+    {% if taken %}
+        {% if result.available %}
+            Result is out. You got {{result.marks}} marks.
+        {% else %}
+            Exam has finished
+            waiting for result...
+        {% endif %}
+    {% else %}
+        {% if Exam %}
+            <div class="row alert alert-primary">
+                <div class="col">
+                    <strong>Current Exam: {{ Exam.subject }}</strong>
                 </div>
-            {% endfor %}
-            <button class="btn btn-primary" type="submit" value="submit">Submit</button>
-        </form>
-{% else %}
-    Exam hasn't yet started
-{% endif %}
+                <!-- <div class="col ml-auto justify-content-end" id="demo"></div> -->
+                <script>
+                    var countDownDate = Date.parse("{{Exam.end_date|date:'m-d-Y H:m:s'}}");
+                    console.log("{{Exam.end_date|date:'m-d-Y H:m:s'}}");
+                    console.log(countDownDate);
+                    // Update the count down every 1 second
+                    var x = setInterval(function() {
+
+                    // Get today's date and time
+                    var now = new Date().getTime();
+                    
+                    // Find the distance between now and the count down date
+                    var distance = countDownDate - now;
+                    
+                    // Time calculations for days, hours, minutes and seconds
+                    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    
+                    // Output the result in an element with id="demo"
+                    document.getElementById("demo").innerHTML = "Exam ends in " + days + "d " + hours + "h "
+                    + minutes + "m " + seconds + "s ";
+                    
+                    // If the count down is over, write some text 
+                    if (distance < 0) {
+                    clearInterval(x);
+                    window.location.reload(false); 
+                    }
+                    }, 1000);
+                </script>
+            </div>
+            <form action="" method="post">
+                {% csrf_token %}
+                {% for question in questions %}
+                <div class="card bg-primary mb-3 ">
+                        <div class="text-white card-body" style="padding: 10px 15px;">
+                            <div class="card-title" style="font-size:large;">                  
+                                <pre style="color: white;margin: 0px;"></pre>{{question.title}}</pre>
+                            </div>
+                            {% if messages %}
+                                {% with i=forloop.counter0 %}
+                                {% if messages|index:i|index:0 == "C" %}
+                                    <div class="p-2 alert alert-primary" style="font-size: small;" role="alert">
+                                        {{ messages|index:i }}
+                                    </div>
+                                {% else %}
+                                    <div class="p-2 alert alert-warning" style="font-size: small;" role="alert">
+                                        {{ messages|index:i}}
+                                    </div>
+                                {% endif %}
+                                {% endwith %}
+                            {% else %}
+                            {% endif %}        
+                        </div>
+                        <ul class = "list-group">
+                            <li class = "list-group-item">
+                                <div class="radio">
+                                    <input type="radio"  value="1" id="question{{question.pk}}o1" name="question{{question.pk}}" group="question{{question.pk}}" />
+                                    <label for="question{{question.pk}}o1">
+                                        {{question.option1}}
+                                    </label>
+                                </div>
+                            </li>
+                            <li class = "list-group-item">
+                                <div class="radio">
+                                    <input type="radio" value="2" id="question{{question.pk}}o2" name="question{{question.pk}}" group="question{{question.pk}}" />
+                                    <label for="question{{question.pk}}o2">
+                                        {{question.option2}}
+                                    </label>
+                                </div>
+                            </li>
+                            <li class = "list-group-item">
+                                <div class="radio">
+                                    <input type="radio" value="3" id="question{{question.pk}}o3" name="question{{question.pk}}" group="question{{question.pk}}" />
+                                    <label for="question{{question.pk}}o3">
+                                        {{question.option3}}
+                                    </label>
+                                </div>
+                            </li>
+                            <li class = "list-group-item">
+                                <div class="radio">
+                                    <input type="radio" value="4" id="question{{question.pk}}o4" name="question{{question.pk}}" group="question{{question.pk}}" />
+                                    <label for="question{{question.pk}}o4">
+                                        {{question.option4}}
+                                    </label>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                {% endfor %}
+                <button class="btn btn-primary" type="submit" value="submit">Submit</button>
+            </form>
+        {% else %}
+            Exam hasn't yet started
+        {% endif %}
+    {% endif %}
 </div>
 {% endblock content %}

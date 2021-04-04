@@ -34,15 +34,17 @@ class Question(models.Model):
     option3 = models.CharField(max_length=255, default='')
     option4 = models.CharField(max_length=255, default='')
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE, null=True)
+    answer = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"{{self.exam}} question"
+        return f"{self.exam} question"
 
 
 class Result(models.Model):
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     marks = models.IntegerField()
+    available = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{{self.student}} {{self.exam}} marks"
+        return f"{self.student.user.first_name} {self.student.user.last_name} {self.exam} marks"

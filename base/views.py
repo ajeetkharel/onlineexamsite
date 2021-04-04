@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from datetime import datetime, timedelta
 import pytz
 
-from school.models import Student, Class, Exam
+from school.models import Student, Class, Exam, Result
 
 @login_required()
 def home(request):
@@ -17,7 +17,7 @@ def home(request):
         context["current_exams"] = []
         context["exams"] = []
         if exams:
-            today_date = datetime.now().replace(tzinfo=pytz.UTC) + timedelta(hours=5, minutes=45) 
+            today_date = datetime.now().replace(tzinfo=pytz.UTC)
             for exam in exams:
                 if exam.start_date.day == today_date.day:
                     context["current_exams"].append(exam)
@@ -25,5 +25,6 @@ def home(request):
                     context["exams"].append(exam)
         return render(request, 'base/dashboard.html', context=context)
     else:
+        context["results"] = Result.objects.all()
+        context["exams"] = Exam.objects.all()
         return render(request, 'base/dashboard.html', context=context)
-

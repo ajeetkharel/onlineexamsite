@@ -1,0 +1,51 @@
+<div>
+    <table class="table table-hover table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Marks</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for result in results %}
+                <tr>
+                    <th scope="row">{{result.student.user.first_name}} {{result.student.user.last_name}}</th>
+                    <td> {{result.marks}} </td>
+                    <td>
+                        <button type="button" id='showResult'
+                        onClick="showToStudent('{{result.pk}}')"
+                        class="btn {% if result.available %}btn-info{% else %} btn-info {% endif %}">{% if result.available %}Hide from Student {% else %}Show to Student{% endif %}</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation">
+        {% if Students.has_other_pages %}
+            <ul class="pagination pagination-sm justify-content-end">
+            <div class="mr-auto">
+                Showing {{Students.paginator.per_page}} out of {{Students.paginator.count}} results
+            </div>
+            {% if Students.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ Students.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+            <li class="page-item disabled"><a class="page-link" >&laquo;</a></li>
+        {% endif %}
+        {% for i in Students.paginator.page_range %}
+            {% if Students.number == i %}
+            <li class="page-item active"><a class="page-link" >{{ i }} <span class="sr-only">(current)</span> 
+        .     </a></li>
+        {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+        {% endfor %}
+        {% if Students.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ Students.next_page_number }}">&raquo;</a></li>
+            {% else %}
+            <li class="page-item disabled"><a class="page-link" >&raquo;</a></li>
+            {% endif %}
+        </ul>
+        {% endif %}
+    </nav>
+</div>

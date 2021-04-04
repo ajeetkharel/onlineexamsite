@@ -1,0 +1,29 @@
+{% extends "base/base.html" %}
+{% block content %}
+<div class="container">
+<h2>All Results</h2>
+<br>
+<table class="table table-hover table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Exam</th>
+                <th scope="col">Date</th>
+                <th scope="col">Marks obtained</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for result in results %}
+                {% if result.available %}
+                    <tr>
+                        <th scope="row">{{result.exam}}</th>
+                        <td> {{result.exam.start_date}} </td>
+                        <td> {{result.marks}} </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+{% endblock content %}

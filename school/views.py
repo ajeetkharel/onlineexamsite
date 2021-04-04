@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Exam, Question, Class
+from .models import Exam, Question, Class, Result, Student
 from user.models import User
 from datetime import datetime, timedelta
 from django.shortcuts import get_list_or_404, get_object_or_404
@@ -50,6 +50,7 @@ def add_exams(request):
 
 
 def take_exam(request, pk):
+    student = Student.objects.get(user=request.user)
     exam = Exam.objects.get(pk=pk)
     questions = Question.objects.filter(exam=exam)
 
@@ -57,6 +58,44 @@ def take_exam(request, pk):
         'title': f"{exam.subject} Exam",
         'Exam': exam,
         'questions': questions,
+        'taken': False
     }
-
+    if Result.objects.filter(student=student, exam=exam).exists():
+        context["taken"] = True
+        context['result'] = Result.objects.get(student=student, exam=exam)
+    else:
+        if request.method == "POST":
+            correct = 0
+            for i in range(questions.count()):
+                user_answer = int(request.POST['question'+str(questions[i].pk)])
+                correct_answer = questions[i].answer
+                if user_answer == correct_answer:
+                    correct+=1
+            Result.objects.create(exam=exam, student=student, marks=correct)
+            context["taken"] = True
     return render(request, "school/exam_view.html", context=context)
+ 
+
+def get_results(request, examid):
+    exam = Exam.objects.get(pk=examid)
+    results = Result.objects.filter(exam=exam)
+    return render(request, "base/results.html", context={'results': results})
+
+def make_available(request, resultid):
+    if request.method == "POST":
+        result = Result.objects.get(pk=resultid)
+        if request.POST["type"] == "hide":
+            result.available = False
+        else:
+            result.available = True
+        result.save()
+        return HttpResponse("success")
+
+def student_results(request):
+    results = Result.objects.filter(student=Student.objects.get(user=request.user))
+
+    context = {
+        'title': "Student Results",
+        'results': results,
+    }
+    return render(request, "school/student_results.html", context = context)
